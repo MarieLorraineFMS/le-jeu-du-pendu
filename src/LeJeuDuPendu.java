@@ -188,6 +188,9 @@ public final class LeJeuDuPendu {
         // Draw frame based on number of errors.
         visualGame(errors);
 
+        System.out.println(RED + "Vies : " + BOLD + renderLives(errors) + RESET);
+        pause(DELAY_MS / 2);
+
         System.out.println();
         // Show current state.
         System.out.println("Mot : " + BOLD + renderProgress(secret, attempts) + RESET);
@@ -335,17 +338,28 @@ public final class LeJeuDuPendu {
         }
     }
 
-    //////////////////// DELAY ////////////////////////
+    private static String renderLives(int errors) {
+        int remain = Math.max(0, MAX_ERRORS - errors);
+        StringBuilder lifeString = new StringBuilder(MAX_ERRORS * 2);
 
-    // Convenience helper: print then pause for DELAY_MS.
+        for (int i = 0; i < MAX_ERRORS; i++) {
+            lifeString.append(i < remain ? '♥' : '·');
+
+            boolean notLast = (i < MAX_ERRORS - 1);
+            if (notLast) {
+                lifeString.append(' ');
+
+            }
+        }
+        return lifeString.toString();
+    }
+    //////////////////// DELAY ////////////////////////////////
+
     private static void printlnWithDelay(String s) {
         System.out.println(s);
         pause(DELAY_MS);
     }
 
-    // Sleep helper:
-    // - Return immediately if delay <= 0 (no-op)
-    // - InterruptedException is swallowed since console pacing is non-critical
     private static void pause(int ms) {
         if (ms <= 0)
             return;
